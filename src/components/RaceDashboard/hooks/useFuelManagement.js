@@ -1,34 +1,27 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 export const useFuelManagement = (initialAutonomySeconds) => {
-  const [currentFuelAutonomy, setCurrentFuelAutonomy] = useState(initialAutonomySeconds);
-  const [elapsedTimeSinceLastRefuel, setElapsedTimeSinceLastRefuel] = useState(0);
-  const [fuelTimerIntervalId, setFuelTimerIntervalId] = useState(null);
+  const [lastRefuelTimestamp, setLastRefuelTimestamp] = useState(Date.now());
 
-  useEffect(() => {
-    setCurrentFuelAutonomy(initialAutonomySeconds);
-    setElapsedTimeSinceLastRefuel(0); 
-  }, [initialAutonomySeconds]);
-  
-  const consumeFuel = useCallback((secondsToConsume) => {
-    setCurrentFuelAutonomy(prev => Math.max(0, prev - secondsToConsume));
-    setElapsedTimeSinceLastRefuel(prev => prev + secondsToConsume);
-  }, []);
+  // Temps écoulé depuis le dernier refuel (en secondes)
+  const elapsedTimeSinceLastRefuel = (Date.now() - lastRefuelTimestamp) / 1000;
 
+  // Carburant restant
+  const currentFuelAutonomy = Math.max(0, initialAutonomySeconds - elapsedTimeSinceLastRefuel);
+
+  // Ravitaillement
   const refuel = useCallback(() => {
-    setCurrentFuelAutonomy(initialAutonomySeconds);
-    setElapsedTimeSinceLastRefuel(0);
-  }, [initialAutonomySeconds]);
-
-  const resetFuelTimer = useCallback(() => {
-    setElapsedTimeSinceLastRefuel(0);
+    setLastRefuelTimestamp(Date.now());
   }, []);
 
+  // Reset (équivalent à refuel)
+  const resetFuelTimer = useCallback(() => {
+    setLastRefuelTimestamp(Date.now());
+  }, []);
 
   return {
     currentFuelAutonomy,
     elapsedTimeSinceLastRefuel,
-    consumeFuel,
     refuel,
     resetFuelTimer,
   };

@@ -1,74 +1,49 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { formatDurationHHMMSS } from '@/utils/timeFormatters';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
-export const useRaceTimer = (raceDurationSeconds, onTick, onEnd) => {
-  const [timeRemaining, setTimeRemaining] = useState(raceDurationSeconds);
-  const [elapsedTime, setElapsedTime] = useState(0);
+export function useRaceTimer(raceDuration, onTick, onEnd) {
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef(null);
+  const [elapsedBeforeStart, setElapsedBeforeStart] = useState(0);
+  const [startTimestamp, setStartTimestamp] = useState(null);
+  const [, forceRerender] = useState(0);
+
+  // Calcul du temps réel
+  const elapsedTime = isRunning && startTimestamp
+    ? elapsedBeforeStart + (Date.now() - startTimestamp) / 1000
+    : elapsedBeforeStart;
 
   useEffect(() => {
-    setTimeRemaining(raceDurationSeconds);
-    setElapsedTime(0);
-  }, [raceDurationSeconds]);
+    if (!isRunning) return;
+    const interval = setInterval(() => {
+      forceRerender(v => v + 1); // juste pour rafraîchir le composant
+      if (onTick) onTick(elapsedTime, Math.max(0, raceDuration - elapsedTime));
+      if (elapsedTime >= raceDuration && onEnd) onEnd();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isRunning, elapsedTime, onTick, onEnd, raceDuration]);
 
-  const clearTimerInterval = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setTimeRemaining((prevTime) => {
-          if (prevTime <= 1) {
-            clearTimerInterval();
-            setIsRunning(false);
-            if (onEnd) onEnd();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-        setElapsedTime((prevElapsed) => {
-          const newElapsed = prevElapsed + 1;
-          if (onTick) onTick(newElapsed, timeRemaining -1);
-          return newElapsed;
-        });
-      }, 1000);
-    } else {
-      clearTimerInterval();
-    }
-    return clearTimerInterval;
-  }, [isRunning, onTick, onEnd, clearTimerInterval, timeRemaining]);
-
-
-  const startTimer = useCallback(() => {
-    if (timeRemaining > 0) {
-      setIsRunning(true);
-    }
-  }, [timeRemaining]);
-
-  const pauseTimer = useCallback(() => {
-    setIsRunning(false);
-  }, []);
-
-  const resetTimer = useCallback(() => {
-    setIsRunning(false);
-    clearTimerInterval();
-    setTimeRemaining(raceDurationSeconds);
-    setElapsedTime(0);
-  }, [raceDurationSeconds, clearTimerInterval]);
+  // ...startTimer, pauseTimer, resetTimer comme avant...
 
   return {
-    timeRemaining,
     elapsedTime,
+    timeRemaining: Math.max(0, raceDuration - elapsedTime),
     isRunning,
-    startTimer,
-    pauseTimer,
-    resetTimer,
-    formattedTimeRemaining: formatDurationHHMMSS(timeRemaining),
-    formattedElapsedTime: formatDurationHHMMSS(elapsedTime),
+    startTimer: () => {
+      if (!isRunning) {
+        setStartTimestamp(Date.now());
+        setIsRunning(true);
+      }
+    },
+    pauseTimer: () => {
+      if (isRunning && startTimestamp) {
+        setElapsedBeforeStart(prev => prev + (Date.now() - startTimestamp) / 1000);
+        setIsRunning(false);
+        setStartTimestamp(null);
+      }
+    },
+    resetTimer: () => {
+      setElapsedBeforeStart(0);
+      setStartTimestamp(null);
+      setIsRunning(false);
+    },
   };
-};
+}
