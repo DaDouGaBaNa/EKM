@@ -95,10 +95,10 @@ const TimerControls = ({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Confirmer le passage de relais ?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    <div>Temps théorique du relais : {formatDurationHHMMSS(currentRelayPlannedDuration)}</div>
-                    <div>Temps réel du relais : {formatDurationHHMMSS(currentRelayActualDuration)}</div>
-                    <div className="mt-3 font-semibold">Autonomie restante estimée : {formatDurationHHMMSS(currentFuelAutonomy)} / {formatDurationHHMMSS(initialFuelAutonomy)}</div>
-                    {isCurrentRelayFuelStopPlanned && <p className="text-yellow-500 font-semibold">Un arrêt FUEL est planifié pour ce relais.</p>}
+                    <span>Temps théorique du relais : {formatDurationHHMMSS(currentRelayPlannedDuration)}</span>
+                    <span>Temps réel du relais : {formatDurationHHMMSS(currentRelayActualDuration)}</span>
+                    <span className="mt-3 font-semibold">Autonomie restante estimée : {formatDurationHHMMSS(currentFuelAutonomy)} / {formatDurationHHMMSS(initialFuelAutonomy)}</span>
+                    {isCurrentRelayFuelStopPlanned && <span className="text-yellow-500 font-semibold">Un arrêt FUEL est planifié pour ce relais.</span>}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="my-4">
@@ -128,9 +128,9 @@ const TimerControls = ({
                 <AlertDialogHeader>
                   <AlertDialogTitle className="text-yellow-500">Avertissement Carburant!</AlertDialogTitle>
                   <AlertDialogDescription>
-                    <p className="font-semibold text-destructive">Risque de panne d’essence.</p>
-                    <p>Un arrêt FUEL était planifié pour ce relais, et l'autonomie est faible.</p>
-                    <p>Êtes-vous sûr de vouloir continuer sans ravitailler ?</p>
+                    <span className="font-semibold text-destructive">Risque de panne d’essence.</span>
+                    <span>Un arrêt FUEL était planifié pour ce relais, et l'autonomie est faible.</span>
+                    <span>Êtes-vous sûr de vouloir continuer sans ravitailler ?</span>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
