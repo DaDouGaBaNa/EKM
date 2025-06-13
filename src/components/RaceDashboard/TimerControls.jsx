@@ -19,6 +19,7 @@ const TimerControls = ({
   isCurrentRelayFuelStopPlanned,
   currentFuelAutonomy,
   initialFuelAutonomy,
+  raceReallyEnded,
 }) => {
   const [showNextRelayDialog, setShowNextRelayDialog] = useState(false);
   const [refuelDecision, setRefuelDecision] = useState(null); 
@@ -69,8 +70,8 @@ const TimerControls = ({
           <Pause className="mr-2 h-5 w-5" /> Pause
         </Button>
       )}
-      {!isRunning && elapsedTime > 0 && elapsedTime < raceDuration && (
-         <Button onClick={onStart} className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 text-md">
+      {!isRunning && elapsedTime > 0 && elapsedTime < raceDuration && !raceReallyEnded && (
+        <Button onClick={onStart} className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 text-md">
           <Play className="mr-2 h-5 w-5" /> Reprendre
         </Button>
       )}
@@ -94,14 +95,14 @@ const TimerControls = ({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Confirmer le passage de relais ?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    <p>Temps théorique du relais : {formatDurationHHMMSS(currentRelayPlannedDuration)}</p>
-                    <p>Temps réel du relais : {formatDurationHHMMSS(currentRelayActualDuration)}</p>
-                    <p className="mt-3 font-semibold">Autonomie restante estimée : {formatDurationHHMMSS(currentFuelAutonomy)} / {formatDurationHHMMSS(initialFuelAutonomy)}</p>
+                    <div>Temps théorique du relais : {formatDurationHHMMSS(currentRelayPlannedDuration)}</div>
+                    <div>Temps réel du relais : {formatDurationHHMMSS(currentRelayActualDuration)}</div>
+                    <div className="mt-3 font-semibold">Autonomie restante estimée : {formatDurationHHMMSS(currentFuelAutonomy)} / {formatDurationHHMMSS(initialFuelAutonomy)}</div>
                     {isCurrentRelayFuelStopPlanned && <p className="text-yellow-500 font-semibold">Un arrêt FUEL est planifié pour ce relais.</p>}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="my-4">
-                  <p className="font-semibold mb-2">Ravitaillement à la fin de ce relais ?</p>
+                  <div className="font-semibold mb-2">Ravitaillement à la fin de ce relais ?</div>
                   <div className="flex gap-2">
                     <Button 
                       onClick={() => setRefuelDecision('yes')}
@@ -152,7 +153,7 @@ const TimerControls = ({
             <AlertDialogHeader>
               <AlertDialogTitle>Confirmer l'arrêt</AlertDialogTitle>
               <AlertDialogDescription>
-                Êtes-vous sûr de vouloirarrêter la course ? Cette action est irréversible.
+                Êtes-vous sûr de vouloir arrêter la course ? Cette action est irréversible.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

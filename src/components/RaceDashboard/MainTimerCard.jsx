@@ -25,6 +25,8 @@ const MainTimerCard = ({
   isCurrentRelayFuelStopPlanned,
   currentFuelAutonomy,
   initialFuelAutonomy,
+  raceReallyEnded,
+
 }) => {
   return (
     <motion.div layout className="w-full">
@@ -71,6 +73,7 @@ const MainTimerCard = ({
               isCurrentRelayFuelStopPlanned={isCurrentRelayFuelStopPlanned}
               currentFuelAutonomy={currentFuelAutonomy}
               initialFuelAutonomy={initialFuelAutonomy}
+              raceReallyEnded={raceReallyEnded}
             />
           </CardContent>
         </motion.div>

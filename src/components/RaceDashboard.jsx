@@ -76,7 +76,6 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
   const {
     currentFuelAutonomy,
     elapsedTimeSinceLastRefuel,
-    consumeFuel,
     refuel,
     resetFuelTimer,
   } = useFuelManagement(initialFuelAutonomyProp);
@@ -88,7 +87,7 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
   });
 
   const [showExportDialog, setShowExportDialog] = useState(false);
-
+  const [raceReallyEnded, setRaceReallyEnded] = useState(false);
   const toggleSection = (section) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
@@ -98,7 +97,11 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
     handleRaceEndLogic(drivers, currentPlannedRelayItem, currentRelayStartTime, currentRelayIndex);
     setShowExportDialog(true); 
   }, [handleRaceEndLogic, drivers, plannedRelayDurations, currentRelayIndex, currentRelayStartTime]);
-  
+
+  const handleCloseExportDialog = () => {
+  setShowExportDialog(false);
+  setRaceReallyEnded(true);
+};
   const driverCalculationsHook = useDriverTimeCalculations(
     drivers,
     plannedRelayDurations,
@@ -120,7 +123,7 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
      if (driverCalculationsHook && typeof driverCalculationsHook.updateDrivingTimes === 'function') {
       driverCalculationsHook.updateDrivingTimes(newElapsed, newRemaining);
     }
-    consumeFuel(1); 
+  
   }, handleActualRaceEnd);
 
   
@@ -222,6 +225,7 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
         elapsedTime={elapsedTime}
         raceProgress={raceProgress}
         isRunning={isRunning}
+        raceReallyEnded={raceReallyEnded}
         raceDuration={raceDuration}
         onStartRace={handleStartRace}
         onPauseRace={handlePauseRace}
@@ -236,7 +240,6 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
         currentFuelAutonomy={currentFuelAutonomy}
         initialFuelAutonomy={initialFuelAutonomyProp}
       />
-
       <PitEventsCard 
         advancedSettings={advancedSettings}
         elapsedTime={elapsedTime}
@@ -336,8 +339,8 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setShowExportDialog(false)}>Non merci</AlertDialogCancel>
-            <AlertDialogAction onClick={handleExportData}>Exporter les Données</AlertDialogAction>
+            <AlertDialogCancel onClick={handleCloseExportDialog}>Non merci</AlertDialogCancel>
+            <AlertDialogAction onClick={() => { handleExportData(); handleCloseExportDialog(); }}>Exporter les Données</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
