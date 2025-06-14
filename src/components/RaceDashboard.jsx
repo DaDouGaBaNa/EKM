@@ -11,6 +11,7 @@ import DriverStatsCard from '@/components/RaceDashboard/DriverStatsCard';
 import RelayLogCard from '@/components/RaceDashboard/RelayLogCard';
 import RelayOrderCard from '@/components/RaceDashboard/RelayOrderCard';
 import FuelAndBallastCard from '@/components/RaceDashboard/FuelAndBallastCard';
+import LiveTimingSelector from '@/components/LiveTimingSelector';
 import { motion } from 'framer-motion';
 import { useRelayManagement } from '@/components/RaceDashboard/hooks/useRelayManagement';
 import { useDriverTimeCalculations } from '@/components/RaceDashboard/hooks/useDriverTimeCalculations';
@@ -329,6 +330,7 @@ const RaceDashboard = ({ raceConfig, onResetRace, onBackToSetup }) => {
         isExpanded={expandedSections.stats}
         onToggleExpand={() => toggleSection('stats')}
       />
+      <LiveTimingSelector />
       
       <AlertDialog open={showExportDialog} onOpenChange={setShowExportDialog}>
         <AlertDialogContent>
