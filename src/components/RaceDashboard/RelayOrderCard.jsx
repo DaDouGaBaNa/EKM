@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Repeat, ChevronUp, ChevronDown, PlusCircle } from 'lucide-react';
+import { Repeat, ChevronUp, ChevronDown, PlusCircle,Download, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import RelayOrderTable from '@/components/RaceDashboard/RelayOrderTable';
 // Removed unused imports: useState, useEffect, useCallback, formatDurationMMSS, parseDurationMMSS
@@ -37,27 +37,65 @@ const RelayOrderCard = ({
     const newPlan = distributeRelayTimeEqually(relayPlan);
     onRelayOrderUpdate(newPlan); // Ensure this updates the master plan
   };
+const handleExportRelayPlan = () => {
+  const dataStr = JSON.stringify(relayPlan, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "relay-plan.json";
+  a.click();
+  URL.revokeObjectURL(url);
+};
 
+const handleImportRelayPlan = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try {
+      const importedPlan = JSON.parse(evt.target.result);
+      if (Array.isArray(importedPlan)) {
+        onRelayOrderUpdate(importedPlan);
+      } else {
+        alert("Fichier invalide");
+      }
+    } catch (err) {
+      alert("Fichier invalide");
+    }
+  };
+  reader.readAsText(file);
+};
   return (
     <motion.div layout className="w-full">
     <Card className="glassmorphism-card shadow-xl overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 md:p-4 border-b border-primary/30">
-        <CardTitle className="text-lg md:text-xl font-bold text-primary flex items-center gap-1 md:gap-2">
-            <Repeat className="h-4 w-4 md:h-5 md:w-5" /> Ordre & Durées Relais
-        </CardTitle>
-        <div className="flex items-center gap-1">
-        <Button variant="outline" size="sm" onClick={() => onAddRelay(relayPlan.length)} className="text-xs p-1 md:text-sm md:p-2" disabled={isRunning}>
-            <PlusCircle className="h-3 w-3 md:h-4 md:w-4 mr-1"/> Ajouter Relais
-        </Button>
-         {/* Optional: Button to manually redistribute times if desired */}
-        {/* <Button variant="outline" size="sm" onClick={handleRedistribute} className="text-xs p-1 md:text-sm md:p-2" disabled={isRunning}>
-            <RefreshCw className="h-3 w-3 md:h-4 md:w-4 mr-1"/> Redistribuer
-        </Button> */}
-        <Button variant="ghost" size="icon" onClick={onToggleExpand} className="h-7 w-7 md:h-8 md:w-8">
-          {isExpanded ? <ChevronUp className="h-4 w-4 md:h-5 md:w-5" /> : <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />}
-        </Button>
-        </div>
-      </CardHeader>
+  <CardTitle className="text-lg md:text-xl font-bold text-primary flex items-center gap-1 md:gap-2">
+    <Repeat className="h-4 w-4 md:h-5 md:w-5" /> Ordre & Durées Relais
+  </CardTitle>
+  <div className="flex items-center gap-1">
+    <Button variant="outline" size="sm" onClick={() => onAddRelay(relayPlan.length)} className="text-xs p-1 md:text-sm md:p-2" disabled={isRunning}>
+      <PlusCircle className="h-3 w-3 md:h-4 md:w-4 mr-1"/> Ajouter Relais
+    </Button>
+    <Button variant="ghost" size="icon" onClick={handleExportRelayPlan} title="Exporter">
+      <Download className="h-4 w-4" />
+    </Button>
+    <Button variant="ghost" size="icon" asChild title="Importer">
+  <label>
+    <Upload className="h-4 w-4" />
+    <input
+      type="file"
+      accept=".json"
+      onChange={handleImportRelayPlan}
+      className="hidden"
+    />
+  </label>
+</Button>
+    <Button variant="ghost" size="icon" onClick={onToggleExpand} className="h-7 w-7 md:h-8 md:w-8">
+      {isExpanded ? <ChevronUp className="h-4 w-4 md:h-5 md:w-5" /> : <ChevronDown className="h-4 w-4 md:h-5 md:w-5" />}
+    </Button>
+  </div>
+</CardHeader>
       <AnimatePresence>
       {isExpanded && (
         <motion.div
@@ -66,7 +104,7 @@ const RelayOrderCard = ({
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <CardContent className="p-0 md:p-1 max-h-72 md:max-h-96 overflow-y-auto">
+          <CardContent className="p-0 md:p-1">
             {relayPlan.length === 0 ? (
               <p className="text-muted-foreground text-center py-4 text-xs md:text-sm">Configurez la course et les pilotes d'abord.</p>
             ) : (

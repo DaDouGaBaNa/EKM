@@ -48,7 +48,7 @@ const SettingsImportExport = ({ config, setConfig, label = "Paramètres" }) => {
         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/80 hover:bg-primary text-white shadow-lg backdrop-blur border border-primary/30 transition-all duration-150"
       >
         <Download className="w-4 h-4" />
-        Exporter {label}
+         {label}
       </button>
       <input
         type="file"
@@ -63,7 +63,7 @@ const SettingsImportExport = ({ config, setConfig, label = "Paramètres" }) => {
         className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/80 hover:bg-secondary text-primary shadow-lg backdrop-blur border border-secondary/30 transition-all duration-150"
       >
         <Upload className="w-4 h-4" />
-        Importer {label}
+         {label}
       </button>
     </div>
   );
