@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Clock } from 'lucide-react';
+import { CarFront, Clock } from 'lucide-react';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 const DigitalClock = () => {
@@ -24,7 +24,7 @@ const Header = () => {
       <div className="max-w-5xl mx-auto px-2 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
           <div className="flex items-center">
-            <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+            <CarFront className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
             <h1 className="ml-2 sm:ml-3 text-lg sm:text-2xl font-bold gradient-text">
               Endurance Karting Manager
             </h1>

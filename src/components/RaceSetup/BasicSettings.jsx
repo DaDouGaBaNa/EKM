@@ -44,7 +44,9 @@ const BasicSettings = ({ config, setConfig, isRaceActive }) => {
     <>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
       <div>
-        <Label className="text-sm md:text-md font-semibold text-primary">Durée Course (HH:MM)</Label>
+        <Label className="text-sm md:text-md font-semibold text-primary flex items-center gap-1">
+          <Clock className="h-4 w-4"/> Durée Course (HH:MM)
+        </Label>
         <div className="flex items-center gap-2 mt-1">
           <Select value={raceHours} onValueChange={(val) => handleChange('raceHours', val)} disabled={isRaceActive}>
             <SelectTrigger className="w-full text-base py-2"><SelectValue placeholder="HH" /></SelectTrigger>
