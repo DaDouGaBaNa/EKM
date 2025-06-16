@@ -95,8 +95,8 @@ const TimerControls = ({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Confirmer le passage de relais ?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    <span>Temps théorique du relais : {formatDurationHHMMSS(currentRelayPlannedDuration)}</span>
-                    <span>Temps réel du relais : {formatDurationHHMMSS(currentRelayActualDuration)}</span>
+                    <span>Temps théorique du relais : {formatDurationHHMMSS(currentRelayPlannedDuration)}</span><br/>
+                    <span>Temps réel du relais : {formatDurationHHMMSS(currentRelayActualDuration)}</span><br />
                     <span className="mt-3 font-semibold">Autonomie restante estimée : {formatDurationHHMMSS(currentFuelAutonomy)} / {formatDurationHHMMSS(initialFuelAutonomy)}</span>
                     {isCurrentRelayFuelStopPlanned && <span className="text-yellow-500 font-semibold">Un arrêt FUEL est planifié pour ce relais.</span>}
                   </AlertDialogDescription>
@@ -106,13 +106,13 @@ const TimerControls = ({
                   <div className="flex gap-2">
                     <Button 
                       onClick={() => setRefuelDecision('yes')}
-                      className={cn("flex-1", refuelDecision === 'yes' ? "bg-green-600 hover:bg-green-700" : "bg-muted hover:bg-muted/80")}
+                      className={cn("flex-1", refuelDecision === 'yes' ? "bg-green-600 hover:bg-green-700" : "bg-black text-white border-2 border-white hover:bg-neutral-500")}
                     >
                       Oui
                     </Button>
                     <Button 
                       onClick={() => setRefuelDecision('no')}
-                      className={cn("flex-1", refuelDecision === 'no' ? "bg-red-600 hover:bg-red-700" : "bg-muted hover:bg-muted/80")}
+                      className={cn("flex-1", refuelDecision === 'no' ? "bg-red-600 hover:bg-red-700" : "bg-black text-white border-2 border-white hover:bg-neutral-500")}
                     >
                       Non
                     </Button>

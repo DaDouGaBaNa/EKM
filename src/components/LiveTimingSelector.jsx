@@ -711,7 +711,7 @@ const LiveTimingSelector = () => {
         <CardTitle className="text-lg md:text-xl font-bold text-primary flex items-center gap-1 md:gap-2">
             <Radio className="h-4 w-4 md:h-5 md:w-5" />LiveTiming</CardTitle>
       </CardHeader>
-      <CardContent className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/80 hover:bg-primary text-white shadow-lg backdrop-blur border border-primary/30 transition-all duration-150"
+      <CardContent className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/80 hover:bg-primary text-red shadow-lg backdrop-blur border border-primary/30 transition-all duration-150"
       >
         <Select value={selectedCountry} onValueChange={value => {
           setSelectedCountry(value);
